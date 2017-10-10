@@ -1,14 +1,12 @@
 repositories {
 	jcenter()
-	maven { 
-		url 'https://maven.fabric.io/public' 
-	}  
+	mavenCentral()
 }
 
 dependencies {
-  
-// Twitter Kit
-	compile('com.twitter.sdk.android:twitter:1.4.0@aar') {
-		transitive = true
-	}
+	compile 'com.twitter.sdk.android:twitter-core:3.1.1'
+	compile 'com.twitter.sdk.android:tweet-ui:3.1.1'
+	compile 'com.twitter.sdk.android:tweet-composer:3.1.1'
+	compile 'com.squareup.retrofit2:retrofit:2.3.0'
+	compile 'com.google.code.gson:gson:2.8.2'
 }

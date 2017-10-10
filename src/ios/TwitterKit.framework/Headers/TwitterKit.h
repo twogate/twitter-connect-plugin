@@ -4,49 +4,46 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-#if __has_feature(modules)
-@import Accounts;
-@import Foundation;
-@import Social;
-@import UIKit;
-#else
+#import <AVFoundation/AVFoundation.h>
 #import <Accounts/Accounts.h>
+#import <CoreMedia/CoreMedia.h>
 #import <Foundation/Foundation.h>
-#import <Social/Social.h>
-#import <UIKit/UIKit.h>
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
-#error "TwitterKit doesn't support iOS 6.x and lower. Please, change your minimum deployment target to iOS 7.0"
-#endif
-
 #import <TwitterCore/TwitterCore.h>
+#import <UIKit/UIKit.h>
 
-#import "Twitter.h"
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 90000
+#error "TwitterKit doesn't support iOS 8.x and lower. Please, change your minimum deployment target to iOS 9.0"
+#endif
+
 #import "TWTRAPIClient.h"
 #import "TWTRCollectionTimelineDataSource.h"
 #import "TWTRComposer.h"
-#import "TWTRDefines.h"
+#import "TWTRComposerViewController.h"
+#import "TWTRJSONConvertible.h"
+#import "TWTRListTimelineDataSource.h"
 #import "TWTRLogInButton.h"
+#import "TWTRMediaEntitySize.h"
+#import "TWTRMoPubAdConfiguration.h"
+#import "TWTRMoPubNativeAdContainerView.h"
+#import "TWTRNotificationConstants.h"
 #import "TWTROAuthSigning.h"
 #import "TWTRSearchTimelineDataSource.h"
-#import "TWTRSession.h"
-#import "TWTRShareEmailViewController.h"
+#import "TWTRTimelineCursor.h"
 #import "TWTRTimelineDataSource.h"
+#import "TWTRTimelineDelegate.h"
+#import "TWTRTimelineFilter.h"
 #import "TWTRTimelineType.h"
 #import "TWTRTimelineViewController.h"
 #import "TWTRTweet.h"
+#import "TWTRTweetCashtagEntity.h"
+#import "TWTRTweetEntity.h"
+#import "TWTRTweetHashtagEntity.h"
 #import "TWTRTweetTableViewCell.h"
+#import "TWTRTweetUrlEntity.h"
+#import "TWTRTweetUserMentionEntity.h"
 #import "TWTRTweetView.h"
 #import "TWTRTweetViewDelegate.h"
 #import "TWTRUser.h"
 #import "TWTRUserTimelineDataSource.h"
-
-#if __has_include(<DigitsKit/DigitsKit.h>)
-#import <DigitsKit/DigitsKit.h>
-#endif
-
-/**
- *  `TwitterKit` can be used as an element in the array passed to the `+[Fabric with:]`.
- */
-#define TwitterKit [Twitter sharedInstance]
+#import "TWTRVideoMetaData.h"
+#import "Twitter.h"

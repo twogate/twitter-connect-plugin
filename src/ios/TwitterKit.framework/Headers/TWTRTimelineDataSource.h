@@ -7,9 +7,14 @@
 
 #import "TWTRTimelineType.h"
 
+@class TWTRAPIClient;
 @class TWTRTimelineCursor;
+@class TWTRTimelineFilter;
+@class TWTRTweet;
 
-typedef void (^TWTRLoadTimelineCompletion)(NSArray *tweets, TWTRTimelineCursor *cursor, NSError *error);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^TWTRLoadTimelineCompletion)(NSArray<TWTRTweet *> *_Nullable tweets, TWTRTimelineCursor *_Nullable cursor, NSError *_Nullable error);
 
 /**
  *  Responsible for building network parameters for requesting a timeline of Tweets.
@@ -27,11 +32,25 @@ typedef void (^TWTRLoadTimelineCompletion)(NSArray *tweets, TWTRTimelineCursor *
  *  @param completion   (required) Invoked with the Tweets and the cursor in case of success, or nil
  *                      and an error in case of error. This must be called on the main thread.
  */
-- (void)loadPreviousTweetsBeforePosition:(NSString *)position completion:(TWTRLoadTimelineCompletion)completion __attribute__((nonnull(2)));
+- (void)loadPreviousTweetsBeforePosition:(nullable NSString *)position completion:(TWTRLoadTimelineCompletion)completion;
 
 /*
  *  The type of the timeline that this data source represents.
  */
 @property (nonatomic, readonly) TWTRTimelineType timelineType;
 
+/*
+ *  An object with a set of filters to hide certain tweets.
+ */
+@property (nonatomic, copy, nullable) TWTRTimelineFilter *timelineFilter;
+
+/**
+ * The API client to use with this data source.
+ * You will, likely, not need to alter this value unless you are implementing your
+ * own timeline view controller.
+ */
+@property (nonatomic) TWTRAPIClient *APIClient;
+
 @end
+
+NS_ASSUME_NONNULL_END

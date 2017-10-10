@@ -5,8 +5,11 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
+#import <TwitterCore/TWTRSession.h>
+#import <TwitterKit/Twitter.h>
 #import <UIKit/UIKit.h>
-#import "TWTRSession.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  A Button which launches the sign in to Twitter flow when tapped.
@@ -32,3 +35,5 @@
 + (instancetype)buttonWithLogInCompletion:(TWTRLogInCompletion)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END
