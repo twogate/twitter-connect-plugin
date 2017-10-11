@@ -62,7 +62,7 @@
 		<resource-file src="src/ios/TwitterKitResources.bundle" />
 		<resource-file src="src/ios/TwitterShareExtensionUIResources.bundle" />
 
-        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+		<config-file target="*-Info.plist" parent="CFBundleURLTypes">
 			<array>
 				<dict>
 					<key>CFBundleURLSchemes</key>
@@ -71,12 +71,12 @@
 					</array>
 				</dict>
 			</array>
-        </config-file>
-        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+		</config-file>
+		<config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
 			<array>
 				<string>twitter</string>
 				<string>twitterauth</string>
 			</array>
-        </config-file>
+		</config-file>
 	</platform>
 </plugin>
