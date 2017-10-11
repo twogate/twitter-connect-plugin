@@ -61,5 +61,22 @@
 		<framework src="src/ios/TwitterCore.framework" custom="true" />
 		<resource-file src="src/ios/TwitterKitResources.bundle" />
 		<resource-file src="src/ios/TwitterShareExtensionUIResources.bundle" />
+
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+			<array>
+				<dict>
+					<key>CFBundleURLSchemes</key>
+					<array>
+						<string>twitterkit-$TWITTER_KEY</string>
+					</array>
+				</dict>
+			</array>
+        </config-file>
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+			<array>
+				<string>twitter</string>
+				<string>twitterauth</string>
+			</array>
+        </config-file>
 	</platform>
 </plugin>
