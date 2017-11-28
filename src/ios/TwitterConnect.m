@@ -40,43 +40,40 @@
 
 @end
 
-@implementation AppDelegate (Twitter)
+static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector);
+@implementation AppDelegate (TwitterConnect)
 
-void TwitterMethodSwizzle(Class c, SEL originalSelector) {
-    NSString *selectorString = NSStringFromSelector(originalSelector);
-    SEL newSelector = NSSelectorFromString([@"swizzled_" stringByAppendingString:selectorString]);
-    SEL noopSelector = NSSelectorFromString([@"noop_" stringByAppendingString:selectorString]);
-    Method originalMethod, newMethod, noop;
-    originalMethod = class_getInstanceMethod(c, originalSelector);
-    newMethod = class_getInstanceMethod(c, newSelector);
-    noop = class_getInstanceMethod(c, noopSelector);
-    if (class_addMethod(c, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
-        class_replaceMethod(c, newSelector, method_getImplementation(originalMethod) ?: method_getImplementation(noop), method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, newMethod);
-    }
++(void)load {
+    swizzleMethod([AppDelegate class],
+                  @selector(application:openURL:options:),
+                  @selector(twitter_application_options:openURL:options:));
 }
 
-+ (void)load
-{
-    TwitterMethodSwizzle([self class], @selector(application:openURL:options:));
-    TwitterMethodSwizzle([self class], @selector(application:openURL:sourceApplication:annotation:));
-}
-
-
-- (void)noop_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
-{
-}
-
-- (void)swizzled_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+- (BOOL)twitter_application_options: (UIApplication *)app
+                              openURL: (NSURL *)url
+                              options: (NSDictionary *)options
 {
     
-    if (!url) {
-        return ;
+    NSRange range = [url.absoluteString rangeOfString:@"twitterkit"];
+    if (range.location != NSNotFound) {
+        return [[Twitter sharedInstance] application:app openURL:url options:options];
     }
-
-    [[Twitter sharedInstance] application:app openURL:url options:options];
-    [self swizzled_application:app openURL:url options:options];
+    else {
+        // Other. call super
+        return [self twitter_application_options:app openURL:url options:options];
+    }
 }
 
 @end
+
+static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector) {
+    Method destinationMethod = class_getInstanceMethod(class, destinationSelector);
+    Method sourceMethod = class_getInstanceMethod(class, sourceSelector);
+    
+
+    if (class_addMethod(class, destinationSelector, method_getImplementation(sourceMethod), method_getTypeEncoding(sourceMethod))) {
+        class_replaceMethod(class, destinationSelector, method_getImplementation(destinationMethod), method_getTypeEncoding(destinationMethod));
+    } else {
+        method_exchangeImplementations(destinationMethod, sourceMethod);
+    }
+}
