@@ -1,5 +1,6 @@
 
 #import "TwitterConnect.h"
+#import <objc/runtime.h>
 #import <TwitterKit/TwitterKit.h>
 
 @implementation TwitterConnect
@@ -35,6 +36,47 @@
 {
 	CDVPluginResult* pluginResult = pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 	[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+@end
+
+@implementation AppDelegate (Twitter)
+
+void TwitterMethodSwizzle(Class c, SEL originalSelector) {
+    NSString *selectorString = NSStringFromSelector(originalSelector);
+    SEL newSelector = NSSelectorFromString([@"swizzled_" stringByAppendingString:selectorString]);
+    SEL noopSelector = NSSelectorFromString([@"noop_" stringByAppendingString:selectorString]);
+    Method originalMethod, newMethod, noop;
+    originalMethod = class_getInstanceMethod(c, originalSelector);
+    newMethod = class_getInstanceMethod(c, newSelector);
+    noop = class_getInstanceMethod(c, noopSelector);
+    if (class_addMethod(c, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+        class_replaceMethod(c, newSelector, method_getImplementation(originalMethod) ?: method_getImplementation(noop), method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, newMethod);
+    }
+}
+
++ (void)load
+{
+    TwitterMethodSwizzle([self class], @selector(application:openURL:options:));
+    TwitterMethodSwizzle([self class], @selector(application:openURL:sourceApplication:annotation:));
+}
+
+
+- (void)noop_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+}
+
+- (void)swizzled_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+    
+    if (!url) {
+        return ;
+    }
+
+    [[Twitter sharedInstance] application:app openURL:url options:options];
+    [self swizzled_application:app openURL:url options:options];
 }
 
 @end
