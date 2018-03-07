@@ -59,8 +59,8 @@
 
 		<framework src="src/ios/TwitterKit.framework" custom="true" />
 		<framework src="src/ios/TwitterCore.framework" custom="true" />
-		<resource-file src="src/ios/TwitterKitResources.bundle" />
-		<resource-file src="src/ios/TwitterShareExtensionUIResources.bundle" />
+		<resource-file src="src/ios/TwitterKit.framework/TwitterKitResources.bundle" />
+		<resource-file src="src/ios/TwitterKit.framework/TwitterShareExtensionUIResources.bundle" />
 
 		<config-file target="*-Info.plist" parent="CFBundleURLTypes">
 			<array>
